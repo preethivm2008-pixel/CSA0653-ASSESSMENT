@@ -1,4 +1,3 @@
-#PREETHIVARTHANA    192521334
 # Kruskal's Algorithm 
 def find(parent, i):
     if parent[i] != i:
