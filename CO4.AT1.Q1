@@ -1,4 +1,3 @@
-#PREETHIVARTHANA       192521334
 # Prim's Algorithm to find Minimum Spanning Tree (MST)
 def prim_mst(graph):
     n = len(graph)
