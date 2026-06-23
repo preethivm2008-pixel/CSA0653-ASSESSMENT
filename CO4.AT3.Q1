@@ -1,0 +1,31 @@
+#PREETHIVARTHANA     192521334
+# Investment Portfolio Optimization
+investments = [
+    ("A", 20000, 25000),
+    ("B", 30000, 40000),
+    ("C", 40000, 50000),
+    ("D", 50000, 70000)
+]
+budget = 80000
+n = len(investments)
+dp = [[0] * (budget + 1) for _ in range(n + 1)]
+for i in range(1, n + 1):
+    name, capital, profit = investments[i - 1]
+    for w in range(budget + 1):
+        if capital <= w:
+            dp[i][w] = max(
+                dp[i - 1][w],
+                profit + dp[i - 1][w - capital]
+            )
+        else:
+            dp[i][w] = dp[i - 1][w]
+selected = []
+w = budget
+for i in range(n, 0, -1):
+    if dp[i][w] != dp[i - 1][w]:
+        name, capital, profit = investments[i - 1]
+        selected.append(name)
+        w -= capital
+selected.reverse()
+print("Optimal Portfolio:", selected)
+print("Maximum Return: Rs.", dp[n][budget])
