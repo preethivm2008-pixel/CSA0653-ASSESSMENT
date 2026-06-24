@@ -1,0 +1,130 @@
+#PREETHIVARTHANA      192521334
+#EXAM TIMETABLING USING GRAPH COLORING + BACKTRACKING
+Problem:
+A university must schedule exams such that:
+1. No student has two exams at the same time.
+2. Limited time slots are available.
+3. Room capacity constraints must be satisfied.
+4. Exams with common students cannot share the same slot.
+Classification:
+Graph Coloring Verification      -> NP
+Exam Timetabling Optimization     -> NP-Hard
+Decision Version                  -> NP-Complete
+Graph Coloring Concept:
+- Each Exam = Vertex
+- Conflict between Exams = Edge
+- Time Slot = Color
+If two exams share students,
+they must have different colors (time slots).
+Example:
+E1 ----- E2
+ |         |
+ |         |
+E3 ----- E4
+Conflict Graph:
+E1 conflicts with E2 and E3
+E2 conflicts with E1 and E4
+E3 conflicts with E1 and E4
+E4 conflicts with E2 and E3
+Available Time Slots:
+Slot 1
+Slot 2
+Slot 3
+Constraints:
+1. No conflicting exams in same slot.
+2. Room capacity >= students taking exam.
+3. Every exam assigned exactly one slot.
+4. Number of slots is limited.
+Approach:
+Backtracking + Graph Coloring
+1. Assign a slot to an exam.
+2. Check conflict constraints.
+3. Check room capacity.
+4. Recursively assign next exam.
+5. Backtrack if violation occurs.
+Pruning:
+A branch is pruned when:
+- Two conflicting exams get same slot.
+- Room capacity is exceeded.
+- No valid slot remains.
+Time Complexity:
+Worst Case:
+O(k^n)
+where,
+n = Number of Exams
+k = Number of Time Slots
+For Example:
+n = 4
+k = 3
+Worst Case = 3^4 = 81
+Space Complexity:
+O(n)
+Reason:
+- Recursion stack = O(n)
+- Slot assignment array = O(n)
+# INPUT DATA
+graph = {
+    'E1': ['E2', 'E3'],
+    'E2': ['E1', 'E4'],
+    'E3': ['E1', 'E4'],
+    'E4': ['E2', 'E3']
+}
+# Number of students per exam
+students = {
+    'E1': 30,
+    'E2': 25,
+    'E3': 20,
+    'E4': 35
+}
+# Room capacity
+ROOM_CAPACITY = 40
+# Available Time Slots
+slots = ["Slot-1", "Slot-2", "Slot-3"]
+# Stores assigned slots
+schedule=5
+def is_safe(exam, slot):
+    # Constraint 1:
+    # Room capacity must be sufficient
+    if students[exam] > ROOM_CAPACITY:
+        return False
+    # Constraint 2:
+    # Conflicting exams cannot share same slot
+    for neighbor in graph[exam]:
+        if neighbor in schedule and schedule[neighbor] == slot:
+            return False
+    return True
+def timetable(exams, index):
+    # Base Case
+    if index == len(exams):
+        return True
+    current_exam = exams[index]
+    for slot in slots:
+        if is_safe(current_exam, slot):
+            schedule[current_exam] = slot
+            print(f"Assigning {current_exam} -> {slot}
+            # EXPLORE
+            if timetable(exams, index + 1):
+                return True
+            # BACKTRACK
+            print(f"Backtracking {current_exam} from {slot}")
+            del schedule[current_exam]
+    return false
+print("EXAM TIMETABLING USING GRAPH COLORING\n")
+exam_list = list(graph.keys())
+if timetable(exam_list, 0):
+    print("\nConflict-Free Exam Schedule:\n")
+    for exam, slot in schedule.items():
+        print(f"{exam} --> {slot}")
+else:
+    print("No valid timetable exists.")
+ OUTPUT:
+EXAM TIMETABLING USING GRAPH COLORING
+Assigning E1 -> Slot-1
+Assigning E2 -> Slot-2
+Assigning E3 -> Slot-2
+Assigning E4 -> Slot-1
+Conflict-Free Exam Schedule:
+E1 --> Slot-1
+E2 --> Slot-2
+E3 --> Slot-2
+E4 --> Slot-1
