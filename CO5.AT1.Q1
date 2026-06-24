@@ -1,0 +1,113 @@
+#PREETHIVARTHANA          192521334
+JOB SCHEDULING USING BACKTRACKING (NP-HARD PROBLEM)
+Problem:
+Assign jobs to employees such that:
+1. Every job is assigned to exactly one employee.
+2. Employee available time must be sufficient for the job.
+3. Job must finish before its deadline.
+4. No employee handles overlapping jobs.
+5. All constraints must be satisfied.
+Classification:
+Verification of a schedule      -> NP
+Optimization Job Scheduling     -> NP-Hard
+Decision version of Scheduling  -> NP-Complete
+Approach:
+Backtracking (Constraint Satisfaction)
+1. Assign a job to an employee.
+2. Check all constraints.
+3. If constraints are satisfied, recursively assign the next job.
+4. If constraints fail, backtrack and try another employee.
+5. Continue until all jobs are assigned.
+State Space Tree:
+                    Start
+               /      |      \
+             E1      E2      E3
+            /|\      /|\      /|\
+          J2...    J2...    J2...
+Pruning:
+A branch is pruned when:
+- Employee does not have enough available time.
+- Job cannot meet its deadline.
+- Assignment violates constraints.
+Time Complexity:
+Worst Case:
+For n jobs and m employees,
+T(n) = O(m^n)
+Reason:
+Each job can be assigned to any of the m employees.
+For this example:
+n = 3 jobs
+m = 3 employees
+Worst-case operations = 3^3 = 27
+Space Complexity:
+O(n)
+Reason:
+- Recursion stack stores at most n calls.
+- Assignment dictionary stores n assignments.
+
+n = Number of Jobs
+# INPUT DATA
+jobs = [
+    ("J1", 2, 4),  # (Job Name, Duration, Deadline)
+    ("J2", 3, 5),
+    ("J3", 1, 3)
+]
+employees = {
+    "E1": 4,   # Available Hours
+    "E2": 5,
+    "E3": 3
+}
+# Stores final assignments
+assignment = {}
+# BACKTRACKING FUNCTION
+def schedule_jobs(job_index):
+    Recursive Backtracking Function
+    Parameters:
+    job_index : int
+        Current job being assigned
+    Returns:
+    True  -> Feasible schedule found
+    False -> No feasible schedule
+    # Base Case:
+    # All jobs assigned successfully
+    if job_index == len(jobs):
+        return True
+    # Current Job Details
+    job_name, duration, deadline = jobs[job_index]
+    # Try assigning current job to each employee
+    for employee in employees:
+        # Constraint 1:
+        # Employee must have sufficient available time
+        if employees[employee] >= duration:
+            # Constraint 2:
+            # Job duration should not exceed deadline
+            if duration <= deadline:
+                # CHOOSE
+                employees[employee] -= duration
+                assignment[job_name] = employee
+                print(f"Assigning {job_name} -> {employee}")
+                # EXPLORE
+                if schedule_jobs(job_index + 1):
+                    return True
+                # BACKTRACK
+                print(f"Backtracking {job_name} from {employee}")
+                employees[employee] += duration
+                del assignment[job_name]
+    # No valid assignment found
+    return False
+print("JOB SCHEDULING USING BACKTRACKING\n")
+if schedule_jobs(0):
+    print("\nFeasible Schedule Found:\n")
+    for job, emp in assignment.items():
+        print(f"{job} --> {emp}")
+else:
+    print("No feasible schedule exists.")
+Output:
+JOB SCHEDULING USING BACKTRACKING
+Assigning J1 -> E1
+Assigning J2 -> E2
+Assigning J3 -> E3
+Feasible Schedule Found:
+J1 --> E1
+J2 --> E2
+J3 --> E3
